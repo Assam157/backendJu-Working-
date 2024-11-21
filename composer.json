@@ -1,4 +1,4 @@
-{
+ {
     "require": {
         "php": "^7.4 || ^8.2.12",
         "slim/slim": "^4.0",
@@ -28,6 +28,9 @@
         "platform": {
             "php": "8.2.12"
         }
+    },
+    "proxy": {
+        "https": "https://backendju-3.onrender.com"
     }
-    "proxy":{"https://backendju-3.onrender.com"}
 }
+
