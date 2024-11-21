@@ -632,7 +632,7 @@ $app->post('/api/products', function ($request,$response) use ($productCollectio
 $app->get('/', function ($request, $response) {
     $response->getBody()->write("Home Route Reached Successfully");
     return addCorsHeader($response)
-        ->withStatus(200);;
+        ->withStatus(200);
 });
 $app->options('/', function($request, $response) {
     return  addCorsHeader($response)
@@ -678,7 +678,7 @@ $app->post('/login', function ($request, $response) use ($userCollection) {
      
 
     $response=CheckData($userCollection, $data, $response);
-    return addCorsheader($response)
+    return addCorsheader($response);
  
 });
 
@@ -686,7 +686,7 @@ $app->post('/signup',function($request , $response) use ($userCollection){
     $data=$request->getParsedBody();
 
     $response=AddUserData($userCollection,$data,$response);
-    return addCorsHeader($response)
+    return addCorsHeader($response);
  
 });
  
