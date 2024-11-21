@@ -29,4 +29,5 @@
             "php": "8.2.12"
         }
     }
+    "proxy":{"https://backendju-3.onrender.com"}
 }
