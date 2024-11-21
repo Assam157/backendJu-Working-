@@ -1,6 +1,6 @@
  FROM php:8.2-fpm
 
-# Install system dependencies including Nginx
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     curl \
     unzip \
@@ -10,7 +10,6 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     pkg-config \
     openssl \
-    nginx \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions required for Laravel
@@ -35,12 +34,10 @@ RUN composer install --no-dev --optimize-autoloader
 # Set permissions for Laravel storage and cache
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 
-# Copy Nginx config file
-COPY nginx/default.conf /etc/nginx/sites-available/default
+# Expose port 9000 for PHP-FPM
+EXPOSE 9000
 
-# Expose port 80 for Nginx
-EXPOSE 80
+# Start PHP-FPM
+CMD php-fpm
 
-# Start Nginx and PHP-FPM
-CMD service nginx start && php-fpm
 
