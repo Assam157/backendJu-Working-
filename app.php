@@ -1,4 +1,10 @@
  <?php
+function addCorsHeaders($response) {
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', '*') // Allow all origins; replace '*' with specific origin if needed
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+}
 header('Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate');
 header('Pragma: no-cache');
 header('Expires: 0');
@@ -283,26 +289,7 @@ $app->post('/api/razorpay/verify', function (Request $request, Response $respons
 });
  
  
-// CORS Middleware: Allow all origins and set the proper headers
-$app->add(function ($request, $handler) {
-    $response = $handler->handle($request);
-    if ($request->getMethod() === 'OPTIONS') {
-        return $response
-            ->withHeader('Access-Control-Allow-Origin', '*') // Adjust as necessary for security
-            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-            ->withStatus(200); // Return 200 status for OPTIONS request
-    }
-    // Set the CORS headers for the response
-    $response = $response
-        ->withHeader('Access-Control-Allow-Origin', '*') // Allow all origins, adjust as needed
-        ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-
-     
-
-    return $response;
-});
+ 
  
 
 // DELETE route for deleting a product by ID
@@ -310,13 +297,7 @@ $app->add(function ($request, $handler) {
  
 
 
-// Custom session middleware to ensure session is started
-$app->add(function ($request, $handler) {
-    if (session_status() == PHP_SESSION_NONE) {
-        session_start();
-    }
-    return $handler->handle($request);
-});
+ 
 
 // MongoDB connection
 $mongoClient = new MongoDB\Client(
@@ -650,24 +631,15 @@ $app->post('/api/products', function ($request,$response) use ($productCollectio
 // Home route for testing
 $app->get('/', function ($request, $response) {
     $response->getBody()->write("Home Route Reached Successfully");
-    return $response
-    ->withHeader('Access-Control-Allow-Origin', '*')
-        ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type')
+    return addCorsHeader($response)
         ->withStatus(200);;
 });
 $app->options('/', function($request, $response) {
-    return $response
-        ->withHeader('Access-Control-Allow-Origin', '*')
-        ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    return  addCorsHeader($response)
         ->withStatus(200);
 });
 $app->options('/submit', function ($request, $response) {
-    return $response
-        ->withHeader('Access-Control-Allow-Origin', '*')
-        ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type')
+    return addCorsHeader($response)
         ->withStatus(200);
 });
 $app->post('/submit', function ($request, $response) use ($productCollection) {
@@ -676,11 +648,7 @@ $app->post('/submit', function ($request, $response) use ($productCollection) {
    
 
     // Set CORS headers
-    $response = $response
-        ->withHeader('Access-Control-Allow-Origin', '*')  // Your frontend origin
-        ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type');
-
+    $response = addCorsheader($response)
     // Write the response based on the result from addProduct
     $response->getBody()->write(json_encode($result['body']));
     return $response
@@ -710,20 +678,16 @@ $app->post('/login', function ($request, $response) use ($userCollection) {
      
 
     $response=CheckData($userCollection, $data, $response);
-    return $response
-    ->withHeader('Access-Control-Allow-Origin', '*')  // Allow all origins, adjust if needed
-    ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-    ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+    return addCorsheader($response)
+ 
 });
 
 $app->post('/signup',function($request , $response) use ($userCollection){
     $data=$request->getParsedBody();
 
     $response=AddUserData($userCollection,$data,$response);
-    return $response
-    ->withHeader('Access-Control-Allow-Origin', '*')  // Allow all origins, adjust if needed
-    ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-    ->withHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+    return addCorsHeader($response)
+ 
 });
  
 
@@ -778,13 +742,7 @@ $app->post('/LogInMayukh',function($request,$response) use ($userCollection){
 });
  
  // Helper function to apply CORS headers
-function addCorsHeaders($response) {
-    return $response
-        ->withHeader('Access-Control-Allow-Origin', '*') // Allow all origins; replace '*' with specific origin if needed
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-}
-
+ 
  
 
 $app->post("/api/products/modify", function($request, $response) use ($productCollection) {
