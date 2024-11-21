@@ -1,4 +1,5 @@
  <?php
+header('Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate');
 
 // Autoload dependencies
 require 'vendor/autoload.php';
