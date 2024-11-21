@@ -631,15 +631,15 @@ $app->post('/api/products', function ($request,$response) use ($productCollectio
 // Home route for testing
 $app->get('/', function ($request, $response) {
     $response->getBody()->write("Home Route Reached Successfully");
-    return addCorsHeader($response)
+    return addCorsHeaders($response)
         ->withStatus(200);
 });
 $app->options('/', function($request, $response) {
-    return  addCorsHeader($response)
+    return  addCorsHeaders($response)
         ->withStatus(200);
 });
 $app->options('/submit', function ($request, $response) {
-    return addCorsHeader($response)
+    return addCorsHeaders($response)
         ->withStatus(200);
 });
 $app->post('/submit', function ($request, $response) use ($productCollection) {
@@ -648,7 +648,7 @@ $app->post('/submit', function ($request, $response) use ($productCollection) {
    
 
     // Set CORS headers
-    $response = addCorsheader($response);
+    $response = addCorsHeaders($response);
     // Write the response based on the result from addProduct
     $response->getBody()->write(json_encode($result['body']));
     return $response
@@ -678,7 +678,7 @@ $app->post('/login', function ($request, $response) use ($userCollection) {
      
 
     $response=CheckData($userCollection, $data, $response);
-    return addCorsheader($response);
+    return addCorsHeaders($response);
  
 });
 
