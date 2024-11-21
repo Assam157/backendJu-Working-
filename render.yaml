@@ -1,0 +1,33 @@
+services:
+  - name: php-backend
+    type: web
+    env: docker
+    plan: free  # Or choose another plan if needed
+    dockerBuild: true
+    dockerfilePath: ./Dockerfile
+    buildCommand: ""  # Leave empty if you're not using any special build command
+    startCommand: php -S 0.0.0.0:8080 -t public  # Replace with your app's entry point if needed
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        sync: false  # Handle sensitive keys manually
+    healthCheckPath: /
+    autoDeploy: true
+    httpPort: 8080  # Adjust this if you're using a different port
+    headers:
+      # Security Headers
+      X-Frame-Options: "DENY"
+      X-XSS-Protection: "1; mode=block"
+      X-Content-Type-Options: "nosniff"
+      Strict-Transport-Security: "max-age=31536000; includeSubDomains; preload"
+      Content-Security-Policy: "default-src 'self';"
+      Referrer-Policy: "strict-origin-when-cross-origin"
+      
+      # CORS Headers
+      Access-Control-Allow-Origin: "*"  # Allow requests from any origin, adjust as needed for security
+      Access-Control-Allow-Methods: "GET, POST, PUT, DELETE, OPTIONS"
+      Access-Control-Allow-Headers: "Content-Type, Authorization, X-Requested-With, X-Frame-Options, X-XSS-Protection, X-Content-Type-Options"
+      Access-Control-Allow-Credentials: "true"  # If you are sending cookies or credentials
+      Access-Control-Expose-Headers: "Content-Length, X-Request-ID"  # Allow these headers to be visible to the browser
+
