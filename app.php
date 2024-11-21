@@ -648,7 +648,7 @@ $app->post('/submit', function ($request, $response) use ($productCollection) {
    
 
     // Set CORS headers
-    $response = addCorsheader($response)
+    $response = addCorsheader($response);
     // Write the response based on the result from addProduct
     $response->getBody()->write(json_encode($result['body']));
     return $response
