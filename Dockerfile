@@ -1,6 +1,7 @@
- FROM php:8.2-fpm
+ # Use official PHP image with FPM
+FROM php:8.2-fpm
 
-# Install system dependencies
+# Install system dependencies (necessary for Laravel)
 RUN apt-get update && apt-get install -y \
     curl \
     unzip \
@@ -12,7 +13,7 @@ RUN apt-get update && apt-get install -y \
     openssl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions required for Laravel
+# Install PHP extensions required for Laravel (e.g., GD, MongoDB)
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install gd
 
@@ -34,10 +35,11 @@ RUN composer install --no-dev --optimize-autoloader
 # Set permissions for Laravel storage and cache
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 
-# Expose port 9000 for PHP-FPM
-EXPOSE 9000
+# Expose the port that your application will run on (usually 8000 for PHP built-in server)
+EXPOSE 8000
 
-# Start PHP-FPM
-CMD php-fpm
+# Start PHP built-in server on the specified port
+CMD php artisan serve --host=0.0.0.0 --port=8000
+
 
 
