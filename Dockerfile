@@ -1,6 +1,6 @@
  FROM php:8.2-fpm
 
-# Install system dependencies
+# Install system dependencies including Nginx
 RUN apt-get update && apt-get install -y \
     curl \
     unzip \
@@ -9,7 +9,9 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libssl-dev \
     pkg-config \
-    openssl
+    openssl \
+    nginx \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions required for Laravel
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
@@ -33,9 +35,12 @@ RUN composer install --no-dev --optimize-autoloader
 # Set permissions for Laravel storage and cache
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 
-# Expose port 8080
-EXPOSE 8080
+# Copy Nginx config file
+COPY nginx/default.conf /etc/nginx/sites-available/default
 
-# Start PHP's built-in server
-CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
+# Expose port 80 for Nginx
+EXPOSE 80
+
+# Start Nginx and PHP-FPM
+CMD service nginx start && php-fpm
 
