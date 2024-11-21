@@ -1,4 +1,4 @@
-FROM php:8.2-cli
+ FROM php:8.2-fpm
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -6,8 +6,9 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libpng-dev \
     libjpeg-dev \
-    libfreetype6-dev\
+    libfreetype6-dev \
     libssl-dev \
+    pkg-config \
     openssl
 
 # Install PHP extensions required for Laravel
