@@ -6,7 +6,9 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libpng-dev \
     libjpeg-dev \
-    libfreetype6-dev
+    libfreetype6-dev\
+    libssl-dev \
+    openssl
 
 # Install PHP extensions required for Laravel
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
