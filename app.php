@@ -693,7 +693,7 @@ $app->post('/signup',function($request , $response) use ($userCollection){
     $data=$request->getParsedBody();
 
     $response=AddUserData($userCollection,$data,$response);
-    return addCorsHeader($response);
+    return addCorsHeaders($response);
  
 });
  
