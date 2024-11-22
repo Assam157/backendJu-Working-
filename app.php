@@ -588,7 +588,7 @@ $app->options('/api/products',function (Request $request, Response $response){
 $app->get('/api/products', function (Request $request, Response $response) use ($productCollection) {
     $products = $productCollection->find()->toArray();
     $response->getBody()->write(json_encode($products));
-    return $response->withHeader('Content-Type', 'application/json');
+    return addCorsHeader($response)->withHeader('Content-Type', 'application/json');
 });
 
 // POST route for handling form submissions
@@ -622,7 +622,7 @@ $app->post('/api/products', function ($request,$response) use ($productCollectio
 
         // Send error response
         $response->getBody()->write(json_encode(['error' => 'Error inserting product']));
-        return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
+        return addCorsHeader($response)->withStatus(500)->withHeader('Content-Type', 'application/json');
     }
 });
  
