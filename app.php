@@ -1,10 +1,5 @@
  <?php
-function addCorsHeaders($response) {
-    return $response
-        ->withHeader('Access-Control-Allow-Origin', '*')  
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-}
+ 
  
 // Autoload dependencies
 require 'vendor/autoload.php';
@@ -28,6 +23,15 @@ $razorpayApiKey = "rzp_test_SGmdC8LUxtlgND";
 $razorpayApiSecret = "T3pymnZ9BZk81wpuoAsLgyOC";  
 $razorpay = new Api($razorpayApiKey, $razorpayApiSecret);
 $user_name;
+
+function addCorsHeaders($response) {
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', '*')  
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+}
+
+
 function CheckSuperUserData1($userCollection, $data, $response) {
     // Extract name and password from data
     $userId = $data['name'] ?? null;
