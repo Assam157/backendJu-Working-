@@ -5,9 +5,7 @@ function addCorsHeaders($response) {
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
         ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 }
-header('Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate');
-header('Pragma: no-cache');
-header('Expires: 0');
+ 
 // Autoload dependencies
 require 'vendor/autoload.php';
 
