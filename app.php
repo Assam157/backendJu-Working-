@@ -216,12 +216,21 @@
   
  
  
-  $app->post('/api/razorpay/create-order', function (Request $request, Response $response) use ($razorpay) {
-     // Check if the user is logged in
-     if (!isset($_SESSION["user_id"])) {  // Assuming 'user_id' is stored in session after login
-         $response->getBody()->write(json_encode(['error' => 'Please log in to continue']));
-         return addCorsHeaders($response)->withStatus(401)->withHeader('Content-Type', 'application/json');
-     }
+   $app->post('/api/razorpay/create-order', function (Request $request, Response $response) use ($razorpay,$userCollection) {
+    $username = $request->getQueryParams()['username'] ?? null;
+
+    if (!$username) {
+        $response->getBody()->write(json_encode(['error' => 'Username is required']));
+        return addCorsHeaders($response)->withStatus(400)->withHeader('Content-Type', 'application/json');
+    }
+
+    $user = $userCollection->findOne(['name' => $username]);
+
+    if (!$user) {
+        $response->getBody()->write(json_encode(['error' => 'User not logged in or does not exist']));
+        return addCorsHeaders($response)->withStatus(403)->withHeader('Content-Type', 'application/json');
+    }
+
  
      // Proceed with Razorpay order creation if user is logged in
      $data = $request->getParsedBody();
@@ -243,13 +252,20 @@
          ]);
  
          // Return the order details
-         $response->getBody()->write(json_encode(['order_id' => $order['id']]));
+         $response->getBody()->write(json_encode([
+            'order_id' => $order['id'],
+            'amount' => $order['amount'],        // Include the amount
+            'currency' => $order['currency'],   // Include the currency
+            'status' => $order['status'],       // Include the order status
+            'receipt' => $order['receipt'],     // Include the receipt
+        ]));
          return addCorsHeaders($response)->withStatus(201)->withHeader('Content-Type', 'application/json');
      } catch (Exception $e) {
          $response->getBody()->write(json_encode(['error' => 'Error creating order: ' . $e->getMessage()]));
          return addCorsHeaders($response)->withStatus(500)->withHeader('Content-Type', 'application/json');
      }
  });
+  
   
  
  $app->options('/api/razorpay/create-order', function (Request $request, Response $response) use ($razorpay){
