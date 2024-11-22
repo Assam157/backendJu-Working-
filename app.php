@@ -290,9 +290,11 @@ $app->post('/api/razorpay/verify', function (Request $request, Response $respons
             return addCorsHeaders($response)->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
     } catch (Exception $e) {
-        $response->getBody()->write(json_encode(['error' => 'Verification error: ' . $e->getMessage()]));
-        return addCorsHeaders($response)->withStatus(500)->withHeader('Content-Type', 'application/json');
-    }
+    error_log('Verification error: ' . $e->getMessage());  // Log the error for debugging
+    $response->getBody()->write(json_encode(['error' => 'Verification error: ' . $e->getMessage()]));
+    return addCorsHeaders($response)->withStatus(500)->withHeader('Content-Type', 'application/json');
+}
+
 });
  
  
