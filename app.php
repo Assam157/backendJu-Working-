@@ -220,7 +220,7 @@ $app->addBodyParsingMiddleware();
     // Check if the user is logged in
     if (!isset($_SESSION["user_id"])) {  // Assuming 'user_id' is stored in session after login
         $response->getBody()->write(json_encode(['error' => 'Please log in to continue']));
-        return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+        return addCorsHeaders($response)->withStatus(401)->withHeader('Content-Type', 'application/json');
     }
 
     // Proceed with Razorpay order creation if user is logged in
@@ -230,7 +230,7 @@ $app->addBodyParsingMiddleware();
     // Validate the amount
     if ($amount <= 0) {
         $response->getBody()->write(json_encode(['error' => 'Invalid amount']));
-        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        return addCorsHeaders($response)->withStatus(400)->withHeader('Content-Type', 'application/json');
     }
 
     try {
@@ -244,7 +244,7 @@ $app->addBodyParsingMiddleware();
 
         // Return the order details
         $response->getBody()->write(json_encode(['order_id' => $order['id']]));
-        return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
+        return addCorsHeaders($response)->withStatus(201)->withHeader('Content-Type', 'application/json');
     } catch (Exception $e) {
         $response->getBody()->write(json_encode(['error' => 'Error creating order: ' . $e->getMessage()]));
         return addCorsHeaders($response)->withStatus(500)->withHeader('Content-Type', 'application/json');
@@ -284,14 +284,14 @@ $app->post('/api/razorpay/verify', function (Request $request, Response $respons
 
         if ($isValidSignature) {
             $response->getBody()->write(json_encode(['message' => 'Payment verified successfully']));
-            return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+            return addCorsHeaders($response)->withStatus(200)->withHeader('Content-Type', 'application/json');
         } else {
             $response->getBody()->write(json_encode(['error' => 'Payment verification failed']));
-            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+            return addCorsHeaders($response)->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
     } catch (Exception $e) {
         $response->getBody()->write(json_encode(['error' => 'Verification error: ' . $e->getMessage()]));
-        return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
+        return addCorsHeaders($response)->withStatus(500)->withHeader('Content-Type', 'application/json');
     }
 });
  
