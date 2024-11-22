@@ -1,7 +1,7 @@
  <?php
 function addCorsHeaders($response) {
     return $response
-        ->withHeader('Access-Control-Allow-Origin', '*') // Allow all origins; replace '*' with specific origin if needed
+        ->withHeader('Access-Control-Allow-Origin', '*')  
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
         ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 }
