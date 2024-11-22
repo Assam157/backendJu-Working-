@@ -12,7 +12,17 @@ use Slim\Views\PhpRenderer;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Razorpay\Api\Api;
- 
+ function addCorsHeaders($response) {
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', '*')  
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+}
+
+header('Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate');
+header('Pragma: no-cache');
+header('Expires: 0');
+header('Surrogate-Control: no-store');  // To disable caching on Cloudflare
 
 // Start the session
 session_start();
@@ -24,12 +34,7 @@ $razorpayApiSecret = "T3pymnZ9BZk81wpuoAsLgyOC";
 $razorpay = new Api($razorpayApiKey, $razorpayApiSecret);
 $user_name;
 
-function addCorsHeaders($response) {
-    return $response
-        ->withHeader('Access-Control-Allow-Origin', '*')  
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-}
+ 
 
 
 function CheckSuperUserData1($userCollection, $data, $response) {
