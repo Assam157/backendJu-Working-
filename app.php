@@ -247,7 +247,7 @@ $app->addBodyParsingMiddleware();
         return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
     } catch (Exception $e) {
         $response->getBody()->write(json_encode(['error' => 'Error creating order: ' . $e->getMessage()]));
-        return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
+        return addCorsHeaders($response)->withStatus(500)->withHeader('Content-Type', 'application/json');
     }
 });
  
@@ -269,7 +269,7 @@ $app->post('/api/razorpay/verify', function (Request $request, Response $respons
     // Check if all required data is present
     if (!$orderId || !$paymentId || !$signature) {
         $response->getBody()->write(json_encode(['error' => 'Incomplete data']));
-        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        return addCorsHeaders($response)->withStatus(400)->withHeader('Content-Type', 'application/json');
     }
 
     try {
@@ -435,7 +435,7 @@ $app->post('/update_product_stock', function ($request, $response) use ($product
     try {
         $objectId = new MongoDB\BSON\ObjectId($productId);
     } catch (Exception $e) {
-        return $response->withJson(['success' => false, 'message' => 'Invalid ObjectId'], 400);
+        return addCorsHeaders($response)->withJson(['success' => false, 'message' => 'Invalid ObjectId'], 400);
     }
 
     // Update product's available quantity
@@ -468,7 +468,7 @@ $app->get("/send_email", function ($request, $response) use ($userCollection) {
             'success' => false,
             'message' => 'Both email and orderDetails are required in emailPayload'
         ]));
-        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        return addCorsHeaders($response)->withStatus(400)->withHeader('Content-Type', 'application/json');
     }
 
     // Decode the emailPayload from JSON (assuming it's passed as a stringified JSON)
@@ -478,7 +478,7 @@ $app->get("/send_email", function ($request, $response) use ($userCollection) {
             'success' => false,
             'message' => 'emailPayload must contain both email and orderDetails fields'
         ]));
-        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        return addCorsHeaders($response)->withStatus(400)->withHeader('Content-Type', 'application/json');
     }
 
  
@@ -495,7 +495,7 @@ $app->get("/send_email", function ($request, $response) use ($userCollection) {
                 'success' => false,
                 'message' => 'User not found'
             ]));
-            return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
+            return addCorsHeaders($response)->withStatus(404)->withHeader('Content-Type', 'application/json');
         }
 
         // Add the user's address and contact to the order details
@@ -535,7 +535,7 @@ $app->get("/send_email", function ($request, $response) use ($userCollection) {
                 'success' => true,
                 'message' => 'Email sent successfully'
             ]));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+            return addCorsHeaders($response)->withHeader('Content-Type', 'application/json')->withStatus(200);
         } catch (Exception $e) {
             // Send failure response
             $response->getBody()->write(json_encode([
@@ -543,14 +543,14 @@ $app->get("/send_email", function ($request, $response) use ($userCollection) {
                 'message' => 'Failed to send email',
                 'error' => $mail->ErrorInfo
             ]));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+            return addCorsHeaders($response)->withHeader('Content-Type', 'application/json')->withStatus(500);
         }
     } catch (\Exception $e) {
         $response->getBody()->write(json_encode([
             'success' => false,
             'message' => 'An error occurred while processing your request.'
         ]));
-        return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
+        return addCorsHeaders($response)->withStatus(500)->withHeader('Content-Type', 'application/json');
     }
 });
 
@@ -794,7 +794,7 @@ $app->post("/api/products/modify", function($request, $response) use ($productCo
         if (!$product) {
             // Return error as JSON response
             $response->getBody()->write(json_encode(['error' => 'Product not found.']));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+            return addCorsHeaders($response)->withHeader('Content-Type', 'application/json')->withStatus(404);
         }
 
         // Prepare the data to update
@@ -812,17 +812,17 @@ $app->post("/api/products/modify", function($request, $response) use ($productCo
         if ($updateResult->getModifiedCount() == 0) {
             // Return error as JSON response
             $response->getBody()->write(json_encode(['error' => 'No changes were made.']));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+            return addCorsHeaders($response)->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
 
         // Return success message as JSON response
         $response->getBody()->write(json_encode(['message' => 'Product updated successfully.']));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        return addCorsHeaders($response)->withHeader('Content-Type', 'application/json')->withStatus(200);
         
     } catch (Exception $e) {
         // Return error as JSON response
         $response->getBody()->write(json_encode(['error' => 'An error occurred: ' . $e->getMessage()]));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+        return addCorsHeaders($response)->withHeader('Content-Type', 'application/json')->withStatus(500);
     }
 });
 
