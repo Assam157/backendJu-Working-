@@ -212,7 +212,22 @@
  
  // Enable the body parsing middleware (for JSON, form data, etc.)
  $app->addBodyParsingMiddleware();
-  
+//MongoDB connection
+ $mongoClient = new MongoDB\Client(
+     "mongodb+srv://Maitreya:killdill12@cluster0.sk6ugig.mongodb.net/?retryWrites=true&w=majority",
+     [],
+     [
+         'typeMap' => [
+             'root' => 'array',
+             'document' => 'array',
+         ],
+     ]
+ );
+ ;
+ $db = $mongoClient->selectDatabase('my_database');
+ $productCollection = $db->selectCollection('products');
+ $db1=$mongoClient->selectDatabase('User_Database');
+ $userCollection = $db1->selectCollection('Users');
   
  
  
@@ -324,22 +339,7 @@
  
   
  
- // MongoDB connection
- $mongoClient = new MongoDB\Client(
-     "mongodb+srv://Maitreya:killdill12@cluster0.sk6ugig.mongodb.net/?retryWrites=true&w=majority",
-     [],
-     [
-         'typeMap' => [
-             'root' => 'array',
-             'document' => 'array',
-         ],
-     ]
- );
- ;
- $db = $mongoClient->selectDatabase('my_database');
- $productCollection = $db->selectCollection('products');
- $db1=$mongoClient->selectDatabase('User_Database');
- $userCollection = $db1->selectCollection('Users');
+ //  
  
  $app->options("/send_email",function($request,$response){
      return addCorsHeaders($response)->withStatus(200);
