@@ -444,7 +444,39 @@
       $response->getBody()->write(json_encode(($productArray)));
       return addCorsHeaders($response)->withHeader('Content-Type', 'application/json');
  });
- 
+  $app->options("/delete",function($request,$response){
+    return addCorsHeaders($response)->withStatus(200);
+ });
+
+
+ $app->post("/delete",function($request,$response)use($productCollection){
+    $data=$request->getParsedBody();
+    $name = $data['name'] ?? null;
+    $type = $data['type'] ?? null;
+  try{
+    if (!$name || !$type) {
+        $response->getBody()->write(json_encode(['message' => 'Product name and type are required']));
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+    }
+
+
+
+    $result=$productCollection->deleteOne(["name"=>$name,"type"=>$type]);
+
+    if ($result->getDeletedCount() > 0) {
+        // Success response
+    $response->getBody()->write(json_encode(['message' => 'Product deleted successfully']));
+        return addCorsHeaders($response)->withHeader('Content-Type', 'application/json')->withStatus(200);
+    } else {
+        // Product not found response
+        $response->getBody()->write(json_encode(['message' => 'Product not found']));
+        return  addCorsHeaders($response)->withHeader('Content-Type', 'application/json')->withStatus(404);
+    }
+} catch (\Exception $e) {
+    // Error handling
+    $response->getBody()->write(json_encode(['message' => 'An error occurred: ' . $e->getMessage()]));
+    return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+}});
  // Route to update the available quantity of a product
  $app->post('/update_product_stock', function ($request, $response) use ($productCollection) {
      $data = $request->getParsedBody();
