@@ -29,8 +29,8 @@
   
  $port = getenv('PORT') ?: 8080;
  
- $razorpayApiKey = "rzp_live_qRnaZ8YPDsdm1G";   
- $razorpayApiSecret =  "juzkAXORiyiWHziDwHiYkuwx";  
+ $razorpayApiKey =  "rzp_test_14mq5wlJmqUxIq";  
+ $razorpayApiSecret =   "409fTjLqwrHcAmxAedb5zQ99";
  $razorpay = new Api($razorpayApiKey, $razorpayApiSecret);
  $user_name;
  
